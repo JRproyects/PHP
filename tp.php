@@ -2,6 +2,7 @@
 
 
 //Logre descargar el archivo desde gitHub! 
+// Y actualizar desde visualcode, bueno, casi, desde git
 
 //a)
 function cargaDatosModulo(){
