@@ -1,70 +1,148 @@
 <?php
+<?php
 
-//a)
-function cargaDatosModulo(){
-$cargaDeDatos=[
-    [30, 28, 26, 22, 18, 12, 10, 14, 17, 20, 25, 29], // 2014
-    [33, 30, 27, 22, 19, 13, 11, 15, 18, 21, 26, 31], // 2015
-    [34, 32, 29, 21, 18, 14, 12, 16, 18, 21, 27, 32], // 2016
-    [33, 31, 28, 22, 18, 13, 11, 14, 17, 22, 26, 31], // 2017
-    [32, 30, 28, 22, 17, 12, 9, 13, 16, 20, 24, 30],  // 2018
-    [32, 30, 27, 23, 19, 14, 12, 11, 17, 23, 25, 29], // 2019
-    [31, 29, 28, 21, 19, 13, 10, 12, 16, 22, 27, 29], // 2020
-    [30, 28, 26, 20, 16, 12, 11, 13, 17, 21, 28, 30], // 2021
-    [31, 29, 27, 21, 17, 12, 11, 15, 18, 22, 26, 30], // 2022
-    [32, 30, 27, 20, 16, 13, 13, 15, 19, 23, 28, 31]  // 2023
-];
-return $cargaDeDatos;
-}
-$meses=[ "enero", "febrero", "marzo", "abril", "mayo", "junio",
-"julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-
-    $cargaDeDatos=cargaDatosModulo();
-//b)
-
-function cargaDatosManuales($cargaDeDatos, $meses){
-    print_r($cargaDeDatos);
-
-    $cargaManual=[];
-    //va a ser recomendable tener que sacar luego la array meses para ejecutarla en demás modulos y reutilizarla.
-    foreach($meses as $indice){    
-    echo"introducir la temperatura de $indice ";
-    $temNueva=trim(fgets(STDIN));
-    $cargaManual[]=$temNueva;
-}
-$cargaDeDatos[]=$cargaManual;
-print_r($cargaDeDatos);
-    
-return $cargaManual;
-
-}
-$cargaManual=cargaDatosManuales($cargaDeDatos, $meses);
-
-function traductor(){
-     
+// Inicialización de datos predeterminados
+function datosP() {
+    return [
+        [30, 28, 26, 22, 18, 12, 10, 14, 17, 20, 25, 29],
+        [33, 30, 27, 22, 19, 13, 11, 15, 18, 21, 26, 31],
+        [34, 32, 29, 21, 18, 14, 12, 16, 18, 21, 27, 32],
+        [33, 31, 28, 22, 18, 13, 11, 14, 17, 22, 26, 31],
+        [32, 30, 28, 22, 17, 12, 9, 13, 16, 20, 24, 30],
+        [32, 30, 27, 23, 19, 14, 12, 11, 17, 23, 25, 29],
+        [31, 29, 28, 21, 19, 13, 10, 12, 16, 22, 27, 29],
+        [30, 28, 26, 20, 16, 12, 11, 13, 17, 21, 28, 30],
+        [31, 29, 27, 21, 17, 12, 11, 15, 18, 22, 26, 30],
+        [32, 30, 27, 20, 16, 13, 13, 15, 19, 23, 28, 31]
+    ];
 }
 
+// Mostrar matriz completa
+function mostrarMatriz($matriz) {
+    foreach ($matriz as $fila) {
+        foreach ($fila as $valor) {
+            echo $valor . " ";
+        }
+        echo "\n";
+    }
+}
 
+// Traductor de año a índice
+function traductorA($anio) {
+    if ($anio < 2014 || $anio > 2023) {
+        echo "Error: Año fuera de rango.\n";
+        return -1;
+    }
+    return $anio - 2014;
+}
 
-// //C)Mostrar el contenido de la matriz por filas y columnas.<--- se podria mostrar con el print_r o era todo con echo?
-// function muestraDeFyC($cargaManual,$cargaDeDatos){
-//     $cargaDeDatos[]=2024<=$cargaManual;
-//     print_r($cargaDeDatos);
-//     #para poder solucionar el problema de que cuando añadamos más datos traves de la cargaManual los datos
-//     #no se borren o que no queden guardados lo que se podria opatar es por convertir la array de cargaDeDatos
-//     #en una array bidimencional en la que tenga asignados años para que simplemente al cargar otro dato de forma 
-//     #manual lo que evitemos es que no aparescan los nuevos datos
+// Traductor de mes a índice
+function traductorMes($mes, $meses) {
+    $indice = -1;
+    for ($i = 0; $i < count($meses); $i++) {
+        if ($meses[$i] === $mes) {
+            $indice = $i;
+            break;
+        }
+    }
+    if ($indice === -1) {
+        echo "Error: Mes inválido.\n";
+    }
+    return $indice;
+}
 
-//     return $cargaDeDatos;
-// }
+// Calcular promedio por mes
+function calculoPromPorMes($datosP, $indiceMes, $mes) {
+    $suma = 0;
+    $cantidadAnios = count($datosP);
 
-// $cargaDeDatos=muestraDeFyC($cargaManual,$cargaDeDatos);
+    for ($i = 0; $i < $cantidadAnios; $i++) {
+        $suma += $datosP[$i][$indiceMes];
+    }
+    $promedio = $suma / $cantidadAnios;
 
+    echo "Promedio para " . $mes . ": " . $promedio . "\n";
+}
 
-// $arreglo = [31, 21, 12, 1, 5];
-// $n = count($arreglo);
-// echo($n);
+// Mostrar temperaturas de un año
+function mostrarAnio($datosP, $indiceAnios, $meses) {
+    echo "Temperaturas del año " . (2014 + $indiceAnios) . ":\n";
 
-// for ($i = 0; $i < $n; $i++) {
-//     echo $arreglo[$i] . "\n";
-// }
+    for ($j = 0; $j < count($meses); $j++) {
+        echo $meses[$j] . ": " . $datosP[$indiceAnios][$j] . "°C\n";
+    }
+}
+
+// Crear y mostrar matriz de primavera
+function crearMostrarPrimavera($datosP) {
+    $primavera = [];
+    for ($i = 0; $i < count($datosP); $i++) {
+        $primavera[$i] = [
+            $datosP[$i][9],  // Octubre
+            $datosP[$i][10], // Noviembre
+            $datosP[$i][11]  // Diciembre
+        ];
+    }
+    mostrarMatriz($primavera);
+}
+
+// Crear y mostrar matriz de invierno
+function crearMostrarInvierno($datosP) {
+    $invierno = [];
+    for ($i = 0; $i < count($datosP); $i++) {
+        $invierno[$i] = [
+            $datosP[$i][5],  // Junio
+            $datosP[$i][6],  // Julio
+            $datosP[$i][7]   // Agosto
+        ];
+    }
+    mostrarMatriz($invierno);
+}
+
+// Buscar temperatura máxima y mínima
+function hallarMaxMin($datosP, $meses) {
+    $max = -9999;
+    $min = 9999;
+    $filaMax = $colMax = $filaMin = $colMin = -1;
+
+    for ($i = 0; $i < count($datosP); $i++) {
+        for ($j = 0; $j < count($datosP[0]); $j++) {
+            if ($datosP[$i][$j] > $max) {
+                $max = $datosP[$i][$j];
+                $filaMax = $i;
+                $colMax = $j;
+            }
+            if ($datosP[$i][$j] < $min) {
+                $min = $datosP[$i][$j];
+                $filaMin = $i;
+                $colMin = $j;
+            }
+        }
+    }
+
+    echo "Temperatura máxima: " . $max . "°C en " . $meses[$colMax] . " de " . (2014 + $filaMax) . "\n";
+    echo "Temperatura mínima: " . $min . "°C en " . $meses[$colMin] . " de " . (2014 + $filaMin) . "\n";
+}
+
+// Programa Principal
+$meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+$datosP = datosP();
+
+// Ejemplo de uso
+echo "Matriz completa:\n";
+mostrarMatriz($datosP);
+
+echo "\nPromedio para marzo:\n";
+$indiceMes = traductorMes("marzo", $meses);
+if ($indiceMes !== -1) {
+    calculoPromPorMes($datosP, $indiceMes, "marzo");
+}
+
+echo "\nMostrar datos de primavera:\n";
+crearMostrarPrimavera($datosP);
+
+echo "\nMostrar datos de invierno:\n";
+crearMostrarInvierno($datosP);
+
+echo "\nTemperatura máxima y mínima:\n";
+hallarMaxMin($datosP, $meses);
