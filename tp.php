@@ -1,6 +1,7 @@
 <?php
+// Función para inicializar datos predeterminados
 function datosP() {
-    return [
+    $datosP=[
         [30, 28, 26, 22, 18, 12, 10, 14, 17, 20, 25, 29],
         [33, 30, 27, 22, 19, 13, 11, 15, 18, 21, 26, 31],
         [34, 32, 29, 21, 18, 14, 12, 16, 18, 21, 27, 32],
@@ -12,14 +13,17 @@ function datosP() {
         [31, 29, 27, 21, 17, 12, 11, 15, 18, 22, 26, 30],
         [32, 30, 27, 20, 16, 13, 13, 15, 19, 23, 28, 31]
     ];
+    return $datosP;
 }
 
+// Mostrar matriz
 function mostrarMatriz($matriz) {
     foreach ($matriz as $fila) {
-        echo implode(" ", $fila) . "\n";
+        echo implode(" ", $fila) . PHP_EOL;
     }
 }
 
+// Traductor de año a índice
 function traductorA($anio) {
     if ($anio < 2014 || $anio > 2023) {
         echo "Error: Año fuera de rango.\n";
@@ -28,6 +32,7 @@ function traductorA($anio) {
     return $anio - 2014;
 }
 
+// Traductor de mes a índice
 function traductorMes($mes, $meses) {
     $indice = array_search($mes, $meses);
     if ($indice === false) {
@@ -37,6 +42,7 @@ function traductorMes($mes, $meses) {
     return $indice;
 }
 
+// Mostrar temperaturas de un año
 function mostrarAnio($datosP, $indiceAnios, $meses) {
     echo "Temperaturas del año " . (2014 + $indiceAnios) . ":\n";
     foreach ($meses as $i => $mes) {
@@ -44,15 +50,17 @@ function mostrarAnio($datosP, $indiceAnios, $meses) {
     }
 }
 
+// Calcular promedio por mes
 function calculoPromPorMes($datosP, $indiceMes, $mes) {
     $suma = array_sum(array_column($datosP, $indiceMes));
     $promedio = $suma / count($datosP);
-    echo "Promedio para $mes: $promedio°C\n";
+    echo "Promedio para $mes: $promedio\n";
 }
 
+// Buscar máximos y mínimos
 function hallarMaxMin($datosP, $meses) {
-    $max = -PHP_INT_MAX;
-    $min = PHP_INT_MAX;
+    $max = -999;
+    $min = 999;
     $filaMax = $colMax = $filaMin = $colMin = 0;
 
     foreach ($datosP as $i => $fila) {
@@ -70,15 +78,30 @@ function hallarMaxMin($datosP, $meses) {
         }
     }
 
-    echo "Temperatura máxima: $max°C en {$meses[$colMax]} de " . (2014 + $filaMax) . "\n";
-    echo "Temperatura mínima: $min°C en {$meses[$colMin]} de " . (2014 + $filaMin) . "\n";
+    echo "Temperatura máxima: $max en {$meses[$colMax]} de " . (2014 + $filaMax) . "\n";
+    echo "Temperatura mínima: $min en {$meses[$colMin]} de " . (2014 + $filaMin) . "\n";
 }
+//Mostrar datos Manualmente
+function cargaManual($meses, $datosP) {
+    $datos = [];
+    for ($i = 0; $i < 1; $i++) {
+        $fila = [];
+        for ($j = 0; $j < count($meses); $j++) {
+            echo "Ingrese la temperatura para el año " . (2024 + $i) . " en " . $meses[$j] . ": ";
+            $fila[] = intval(trim(fgets(STDIN))); // Leer y convertir a entero tuvimos que usar interval porque no encotramos otra forma 
 
+        }
+        $datosP[] = $fila;
+    }
+    return $datosP;
+}
+// Mostrar datos de primavera
 function crearMostrarPrimavera($datosP) {
     $primavera = array_map(fn($fila) => array_slice($fila, 9, 3), $datosP);
     mostrarMatriz($primavera);
 }
 
+// Mostrar datos de invierno
 function crearMostrarInvierno($datosP) {
     $invierno = array_map(fn($fila) => array_slice($fila, 5, 3), $datosP);
     mostrarMatriz($invierno);
@@ -88,7 +111,14 @@ function crearMostrarInvierno($datosP) {
 $meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 $datosP = datosP();
 
+
 echo "Bienvenido al programa principal\n";
+
+echo "Desea ingresar datos de forma manual?(si/no)\n";
+$manualDatos=strtolower(trim(fgets(STDIN)));
+if ($manualDatos=="si"){
+$datosP=cargaManual($meses, $datosP);
+}
 do {
     echo "¿Qué desea hacer?\n";
     echo "1. Mostrar la matriz completa\n";
